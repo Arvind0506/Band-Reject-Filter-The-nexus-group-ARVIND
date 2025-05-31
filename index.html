@@ -1,184 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Band Reject Filter</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            display: flex;
-            padding: 20px;
-            gap: 20px;
-        }
-        
-        .sidebar {
-            width: 30%;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px #ccc;
-        }
-
-        .control-panel label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        input {
-            width: 100%;
-            padding: 5px;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px #ccc;
-            text-align: center;
-        }
-
-        canvas {
-            width: 100%;
-            height: 300px;
-        }
-
-        button {
-            padding: 10px;
-            margin-top: 10px;
-            width: 100%;
-            background: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        button:hover {
-            background: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Band Reject Filter Simulation</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+      background: #f0f0f0;
+    }
+    .left-panel, .right-panel {
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .left-panel {
+      width: 30%;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .control-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .control-group label {
+      font-weight: bold;
+    }
+    .control-group input[type="number"],
+    .control-group input[type="range"] {
+      width: 100%;
+    }
+    .right-panel {
+      width: 70%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    canvas {
+      background: #fff;
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h2>Adjust Parameters</h2>
-        <div class="control-panel">
-            <label>Resistor (Ω): <input type="number" id="rValue" value="1000"></label>
-            <label>Capacitor (µF): <input type="number" id="cValue" value="0.001"></label>
-            <label>Center Frequency (Hz): <input type="number" id="fcValue" value="1000"></label>
-            <label>Frequency Range (Hz): <input type="range" id="freqRange" min="100" max="10000" value="1000"></label>
-            <label>
-                <input type="checkbox" id="autoFc" checked>
-                Auto fc = 1 / (2πRC)
-            </label>
-            <button onclick="updateChart()">Update Response</button>
-        </div>
+  <div class="left-panel">
+    <div class="control-group">
+      <label for="rValue">Resistance (R in Ohms)</label>
+      <input type="number" id="rValue" value="1000" step="100">
+      <input type="range" id="rSlider" min="100" max="10000" value="1000">
     </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <h2>Frequency Response & Oscilloscope</h2>
-        <canvas id="responseChart"></canvas>
-        <h3>Oscilloscope Simulation</h3>
-        <canvas id="oscilloscopeCanvas"></canvas>
+    <div class="control-group">
+      <label for="cValue">Capacitance (C in F)</label>
+      <input type="number" id="cValue" value="0.000001" step="0.000001">
+      <input type="range" id="cSlider" min="0.0000001" max="0.00001" step="0.0000001" value="0.000001">
     </div>
+    <div class="control-group">
+      <label for="fcValue">Center Frequency (Hz)</label>
+      <input type="number" id="fcValue" value="1000">
+    </div>
+    <div class="control-group">
+      <label for="oscFreq">Oscillator Frequency (Hz)</label>
+      <input type="number" id="oscFreq" value="1000">
+      <input type="range" id="oscSlider" min="100" max="5000" value="1000">
+    </div>
+    <div class="control-group">
+      <input type="checkbox" id="autoFc" checked>
+      <label for="autoFc">Auto fc = 1 / (2πRC)</label>
+    </div>
+  </div>
 
-    <script>
-        const rInput = document.getElementById('rValue');
-        const cInput = document.getElementById('cValue');
-        const fcInput = document.getElementById('fcValue');
-        const rangeInput = document.getElementById('freqRange');
-        const autoFc = document.getElementById('autoFc');
+  <div class="right-panel">
+    <canvas id="responseChart" height="250"></canvas>
+    <canvas id="oscilloscopeCanvas" height="200"></canvas>
+  </div>
 
-        const ctx = document.getElementById('responseChart').getContext('2d');
-        const oscCtx = document.getElementById('oscilloscopeCanvas').getContext('2d');
+  <script>
+    const rInput = document.getElementById('rValue');
+    const rSlider = document.getElementById('rSlider');
+    const cInput = document.getElementById('cValue');
+    const cSlider = document.getElementById('cSlider');
+    const fcInput = document.getElementById('fcValue');
+    const oscInput = document.getElementById('oscFreq');
+    const oscSlider = document.getElementById('oscSlider');
+    const autoFc = document.getElementById('autoFc');
 
-        let chart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: 'Gain (dB)',
-                    data: [],
-                    borderColor: 'blue',
-                    borderWidth: 2,
-                    fill: false,
-                    pointRadius: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                animation: false,
-                scales: {
-                    x: { type: 'linear', title: { display: true, text: 'Frequency (Hz)' } },
-                    y: { title: { display: true, text: 'Gain (dB)' }, min: -40, max: 0 }
-                }
-            }
-        });
+    function syncInputs(input, slider) {
+      input.addEventListener('input', () => slider.value = input.value);
+      slider.addEventListener('input', () => input.value = slider.value);
+    }
+    syncInputs(rInput, rSlider);
+    syncInputs(cInput, cSlider);
+    syncInputs(oscInput, oscSlider);
 
-        function drawOscilloscope(frequency) {
-            const width = oscCtx.canvas.width;
-            const height = oscCtx.canvas.height;
-            oscCtx.clearRect(0, 0, width, height);
-            oscCtx.beginPath();
-            const amplitude = height / 4;
-            const midY = height / 2;
-            const cycles = 2;
-
-            for (let x = 0; x < width; x++) {
-                let t = x / width * cycles * 2 * Math.PI;
-                let y = Math.sin(t * frequency / 1000);
-                if (x === 0) {
-                    oscCtx.moveTo(x, midY - y * amplitude);
-                } else {
-                    oscCtx.lineTo(x, midY - y * amplitude);
-                }
-            }
-
-            oscCtx.strokeStyle = 'green';
-            oscCtx.lineWidth = 2;
-            oscCtx.stroke();
+    const ctx = document.getElementById('responseChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Gain (dB)',
+          data: [],
+          borderColor: 'blue',
+          borderWidth: 2,
+          fill: false,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        animation: false,
+        scales: {
+          x: { type: 'linear', title: { display: true, text: 'Frequency (Hz)' } },
+          y: { title: { display: true, text: 'Gain (dB)' }, min: -40, max: 0 }
         }
+      }
+    });
 
-        function updateChart() {
-            const R = parseFloat(rInput.value);
-            const C = parseFloat(cInput.value) * 1e-6; // Convert µF to F
-            let fc = parseFloat(fcInput.value);
+    function updateChart() {
+      const R = parseFloat(rInput.value);
+      const C = parseFloat(cInput.value);
+      let fc = parseFloat(fcInput.value);
 
-            if (autoFc.checked) {
-                fc = 1 / (2 * Math.PI * R * C);
-                fcInput.value = fc.toFixed(2);
-            }
+      if (autoFc.checked) {
+        fc = 1 / (2 * Math.PI * R * C);
+        fcInput.value = fc.toFixed(2);
+      }
 
-            const data = [];
+      const data = [];
+      for (let f = fc / 10; f <= fc * 10; f += (fc * 10 - fc / 10) / 200) {
+        const omega = 2 * Math.PI * f;
+        const gain = Math.sqrt(1 / (1 + Math.pow(omega * R * C, 2)));
+        const gainDb = 20 * Math.log10(gain);
+        data.push({ x: f, y: gainDb });
+      }
 
-            for (let f = fc / 10; f <= fc * 10; f += (fc * 10 - fc / 10) / 200) {
-                const omega = 2 * Math.PI * f;
-                const gain = Math.sqrt(1 / (1 + Math.pow(omega * R * C, 2)));
-                const gainDb = 20 * Math.log10(gain);
-                data.push({ x: f, y: gainDb });
-            }
+      chart.data.labels = data.map(point => point.x);
+      chart.data.datasets[0].data = data;
+      chart.update();
+    }
 
-            chart.data.labels = data.map(point => point.x);
-            chart.data.datasets[0].data = data;
-            chart.update();
+    rInput.addEventListener('input', updateChart);
+    cInput.addEventListener('input', updateChart);
+    fcInput.addEventListener('input', updateChart);
+    oscInput.addEventListener('input', updateChart);
+    autoFc.addEventListener('change', updateChart);
+    updateChart();
 
-            drawOscilloscope(fc);
-        }
+    // Oscilloscope simulation
+    const oscCanvas = document.getElementById('oscilloscopeCanvas');
+    const oscCtx = oscCanvas.getContext('2d');
 
-        rInput.addEventListener('input', updateChart);
-        cInput.addEventListener('input', updateChart);
-        fcInput.addEventListener('input', updateChart);
-        rangeInput.addEventListener('input', updateChart);
-        autoFc.addEventListener('change', updateChart);
+    function drawOscilloscope() {
+      const freq = parseFloat(oscInput.value);
+      const width = oscCanvas.width;
+      const height = oscCanvas.height;
+      const samples = 500;
+      const amp = height / 4;
+      const offset = height / 2;
 
-        updateChart();
-    </script>
+      oscCtx.clearRect(0, 0, width, height);
+      oscCtx.beginPath();
+      for (let i = 0; i < samples; i++) {
+        const x = (i / samples) * width;
+        const y = offset - amp * Math.sin(2 * Math.PI * freq * i / samples);
+        if (i === 0) oscCtx.moveTo(x, y);
+        else oscCtx.lineTo(x, y);
+      }
+      oscCtx.strokeStyle = 'green';
+      oscCtx.lineWidth = 2;
+      oscCtx.stroke();
+      requestAnimationFrame(drawOscilloscope);
+    }
+    drawOscilloscope();
+  </script>
+
 </body>
 </html>
