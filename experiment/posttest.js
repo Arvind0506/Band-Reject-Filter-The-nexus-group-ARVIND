@@ -90,56 +90,56 @@
 
   const myQuestions = [
     {
-      question1: "What happens to the collector current when the base current is removed in switching mode?",  
+      question1: "1. In a BRF, the frequency where attenuation is maximum is called:",  
       answers: {
-        a: "It increases",
-        b: "It remains the same",
-        c: "It drops to zero",
-        d: "It becomes negative"
+        a: "Cut-off frequency",
+        b: "Resonant frequency",
+        c: "Notch frequency ",
+        d: "Center frequency"
         },
       "correctAnswer": "c"               
     },
 
     {
-      question2: " In saturation mode, both the base-emitter and base-collector junctions are:",  ///// Write the question inside double quotes
+      question2: " If L = 2.53 mH and C = 0.01 µF, then the notch frequency is approximately:",  ///// Write the question inside double quotes
       answers: {
-        a: "Forward biased",
-        b: "Reverse biased",
-        c: "Forward and reverse biased respectively",
-        d: "Unbiased"
+        a: "500 Hz",
+        b: "1 KHz",
+        c: "5 KHz",
+        d: "10 KHz"
       },
-      "correctAnswer": "a"                ///// Write the correct option inside double quotes
+      "correctAnswer": "b"                ///// Write the correct option inside double quotes
     },
     
     {
-      question3: "What is the primary function of a transistor in switching mode?",  
+      question3: "In the frequency response plot of a BRF, the notch appears:",  
       answers: {
-        a: "Amplification",
-        b: "Filtering",
-        c: "Rectification",
-        d: "Turning circuits on/off"
+        a: "As a peak",
+        b: "As a dip",
+        c: "As a straight line",
+        d: "As a parabola"
         },
-      "correctAnswer": "c"              
+      "correctAnswer": "b"              
     },
 
     {
-      question4: "What does the transistor act like in switching mode?",  
+      question4: "4. The Band Reject Filter is formed by combining:",  
       answers: {
-        a: "A rectifier",
-        b: "A diode",
-        c: "A switch",
-        d: "A signal generator"
+        a: "LPF and HPF",
+        b: "LPF and BPF",
+        c: "BPF and differentiator",
+        d: "Integrator and amplifier"
         },
-      "correctAnswer": "c"               
+      "correctAnswer": "a"               
     },
 
     {
-      question5: "Which component is commonly connected with the transistor to control an LED blink?",  
+      question5: "5. A real-life application of a BRF is:",  
       answers: {
-        a: "Inductor",
-        b: "Capacitor",
-        c: "Resistor",
-        d: "Transformer"
+        a: "Voltage regulation",
+        b: "Removing 50/60 Hz power line noise ",
+        c: "Amplifying RF signals",
+        d: "Rectifying AC signals"
         },
       "correctAnswer": "c"               
     },
