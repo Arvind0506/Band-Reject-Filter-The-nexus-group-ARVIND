@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Band Reject Filter Simulation</title>
-  <link rel="stylesheet" href="main.css" />
+  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 </head>
@@ -14,11 +14,8 @@
   </header>
   <main>
     <section class="controls">
-      <label>
-        R (Ohms): <input type="number" id="resistor" value="1000" />
-      </label>
-      <label>
-        C: <input type="number" id="capacitor" value="1" step="0.1" />
+      <label>R (Ohms): <input type="number" id="resistor" value="1000"></label>
+      <label>C: <input type="number" id="capacitor" value="1" step="0.1">
         <select id="capUnit">
           <option value="1">F</option>
           <option value="1e-3">mF</option>
@@ -27,39 +24,25 @@
           <option value="1e-12">pF</option>
         </select>
       </label>
-      <label>
-        Center Frequency (f₀ Hz): <input type="number" id="centerFreq" value="1000" />
-      </label>
-      <label>
-        Frequency Range (Hz): 
-        <input type="range" id="frequencyRange" min="10" max="5000" value="1000" />
+      <label>Center Frequency (f₀ Hz): <input type="number" id="centerFreq" value="1000"></label>
+      <label>Frequency Range (Hz): <input type="range" id="frequencyRange" min="10" max="5000" value="1000">
         <span id="rangeValue">1000</span>
       </label>
-      <label>
-        Oscillator Frequency (Hz): <input type="number" id="oscFreq" value="1000" />
-      </label>
-      <label>
-        <input type="checkbox" id="autoMode" checked /> Auto f₀ = 1 / (2πRC)
-      </label>
+      <label>Oscillator Frequency (Hz): <input type="number" id="oscFreq" value="1000"></label>
+      <label><input type="checkbox" id="autoMode" checked> Auto f₀ = 1 / (2πRC)</label>
     </section>
-
-    <section>
-      <canvas id="responseChart" width="800" height="400"></canvas>
-    </section>
-
+    <section><canvas id="responseChart" width="800" height="400"></canvas></section>
     <section class="export-buttons">
       <button class="button" onclick="exportChartAsImage()">Export as PNG</button>
       <button class="button" onclick="exportDataAsCSV()">Export Data (CSV)</button>
       <button class="button" onclick="exportOscilloscopeAsImage()">Download Waveform Image</button>
     </section>
-
     <section>
       <h3>Oscilloscope Simulation</h3>
       <canvas id="oscilloscope" width="800" height="300"></canvas>
       <audio id="audioOutput" controls></audio>
     </section>
   </main>
-
-  <script src="main.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
