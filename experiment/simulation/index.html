@@ -1,13 +1,65 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<!-- Add CSS at the head of HTML file -->
-    <link rel="stylesheet" href="./css/main.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Band Reject Filter Simulation</title>
+  <link rel="stylesheet" href="css/main.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
 </head>
 <body>
-		<!-- Your code goes here-->
+  <header>
+    <h1>Band Reject Filter Simulation</h1>
+  </header>
+  <main>
+    <section class="controls">
+      <label>
+        R (Ohms): <input type="number" id="resistor" value="1000" />
+      </label>
+      <label>
+        C: <input type="number" id="capacitor" value="1" step="0.1" />
+        <select id="capUnit">
+          <option value="1">F</option>
+          <option value="1e-3">mF</option>
+          <option value="1e-6" selected>μF</option>
+          <option value="1e-9">nF</option>
+          <option value="1e-12">pF</option>
+        </select>
+      </label>
+      <label>
+        Center Frequency (f₀ Hz): <input type="number" id="centerFreq" value="1000" />
+      </label>
+      <label>
+        Frequency Range (Hz): 
+        <input type="range" id="frequencyRange" min="10" max="5000" value="1000" />
+        <span id="rangeValue">1000</span>
+      </label>
+      <label>
+        Oscillator Frequency (Hz): <input type="number" id="oscFreq" value="1000" />
+      </label>
+      <label>
+        <input type="checkbox" id="autoMode" checked /> Auto f₀ = 1 / (2πRC)
+      </label>
+    </section>
 
-	<!-- Add JS at the bottom of HTML file --> 
-        <script src="./js/main.js"></script>
+    <section>
+      <canvas id="responseChart" width="800" height="400"></canvas>
+    </section>
+
+    <section class="export-buttons">
+      <button class="button" onclick="exportChartAsImage()">Export as PNG</button>
+      <button class="button" onclick="exportDataAsCSV()">Export Data (CSV)</button>
+      <button class="button" onclick="exportOscilloscopeAsImage()">Download Waveform Image</button>
+    </section>
+
+    <section>
+      <h3>Oscilloscope Simulation</h3>
+      <canvas id="oscilloscope" width="800" height="300"></canvas>
+      <audio id="audioOutput" controls></audio>
+    </section>
+  </main>
+
+  <script src="js/main.js"></script>
 </body>
 </html>
