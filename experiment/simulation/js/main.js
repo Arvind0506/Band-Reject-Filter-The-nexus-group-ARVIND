@@ -1,182 +1,109 @@
-//Your JavaScript goes in here
-const resistorInput = document.getElementById("resistor");
-const capacitorInput = document.getElementById("capacitor");
-const capUnitSelect = document.getElementById("capUnit");
-const centerFreqInput = document.getElementById("centerFreq");
-const autoMode = document.getElementById("autoMode");
-const freqSlider = document.getElementById("frequencyRange");
-const rangeValue = document.getElementById("rangeValue");
-const oscFreqInput = document.getElementById("oscFreq");
+let chart, audioContext, oscillator, analyser, bufferLength, dataArray;
 
-let chart, oscChart;
+function updateChart() {
+    const ctx = document.getElementById("responseChart").getContext("2d");
+    const R = parseFloat(document.getElementById("rValue").value);
+    const C = parseFloat(document.getElementById("cValue").value) * 1e-6;
+    let fc = parseFloat(document.getElementById("fcValue").value);
+    
+    fc = 1 / (2 * Math.PI * R * C);
+    document.getElementById("fcValue").value = fc.toFixed(2);
 
-function getCapacitanceInFarads() {
-  const baseValue = parseFloat(capacitorInput.value);
-  const multiplier = parseFloat(capUnitSelect.value);
-  return baseValue * multiplier;
-}
+    const data = [];
+    for (let f = fc / 10; f <= fc * 10; f += (fc * 10 - fc / 10) / 200) {
+        const omega = 2 * Math.PI * f;
+        const gain = Math.sqrt(1 / (1 + Math.pow(omega * R * C, 2)));
+        const gainDb = 20 * Math.log10(gain);
+        data.push({ x: f, y: gainDb });
+    }
 
-function updateFrequencyResponse() {
-  const R = parseFloat(resistorInput.value);
-  const C = getCapacitanceInFarads();
-  let f0 = parseFloat(centerFreqInput.value);
-
-  if (isNaN(R) || isNaN(C) || R === 0 || C === 0) return;
-
-  if (autoMode.checked) {
-    f0 = 1 / (2 * Math.PI * R * C);
-    centerFreqInput.value = f0.toFixed(2);
-  }
-
-  const maxFreq = parseFloat(freqSlider.value);
-  const frequencies = [];
-  const gain = [];
-
-  for (let f = 10; f <= maxFreq; f += 10) {
-    const omega = 2 * Math.PI * f;
-    const omega0 = 2 * Math.PI * f0;
-    const Q = 1;
-    const H = 1 / (1 + Q * (omega0 / omega - omega / omega0));
-    frequencies.push(f);
-    gain.push(Math.abs(H));
-  }
-
-  chart.data.labels = frequencies;
-  chart.data.datasets[0].data = gain;
-  chart.update();
-
-  updateOscilloscope();
-  generateAudio();
-}
-
-function updateOscilloscope() {
-  const t = [], Vin = [], Vout = [];
-  const R = parseFloat(resistorInput.value);
-  const C = getCapacitanceInFarads();
-  const f = parseFloat(oscFreqInput.value);
-  const f0 = parseFloat(centerFreqInput.value);
-  const dt = 0.0001;
-  const totalTime = 0.01;
-
-  for (let i = 0; i < totalTime / dt; i++) {
-    let time = i * dt;
-    t.push(time * 1000);
-    let input = Math.sin(2 * Math.PI * f * time);
-    let gain = 1 / (1 + Math.pow((f / f0 - f0 / f), 2));
-    let output = input * gain;
-    Vin.push(input);
-    Vout.push(output);
-  }
-
-  oscChart.data.labels = t;
-  oscChart.data.datasets[0].data = Vin;
-  oscChart.data.datasets[1].data = Vout;
-  oscChart.update();
-}
-
-function exportChartAsImage() {
-  const link = document.createElement('a');
-  link.download = 'frequency_response.png';
-  link.href = document.getElementById("responseChart").toDataURL("image/png");
-  link.click();
-}
-
-function exportDataAsCSV() {
-  let csv = "Frequency (Hz),Gain\n";
-  chart.data.labels.forEach((f, i) => {
-    csv += ${f},${chart.data.datasets[0].data[i]}\n;
-  });
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "band_reject_data.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function exportOscilloscopeAsImage() {
-  const link = document.createElement('a');
-  link.download = 'oscilloscope_waveform.png';
-  link.href = document.getElementById("oscilloscope").toDataURL("image/png");
-  link.click();
-}
-
-function generateAudio() {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc = ctx.createOscillator();
-  const gainNode = ctx.createGain();
-  const freq = parseFloat(oscFreqInput.value);
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(freq, ctx.currentTime);
-  osc.connect(gainNode);
-  gainNode.connect(ctx.destination);
-  osc.start();
-  setTimeout(() => osc.stop(), 1000);
-
-  const dest = ctx.createMediaStreamDestination();
-  gainNode.connect(dest);
-  const audio = document.getElementById("audioOutput");
-  audio.srcObject = dest.stream;
-}
-
-function setupChart() {
-  const ctx = document.getElementById("responseChart").getContext("2d");
-  chart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: [],
-      datasets: [{
-        label: "Gain vs Frequency",
-        borderColor: "#e74c3c",
-        data: [],
-        fill: false,
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        x: { type: 'linear', title: { display: true, text: 'Frequency (Hz)' } },
-        y: { title: { display: true, text: 'Gain' }, min: 0, max: 1.2 }
-      },
-      plugins: {
-        zoom: {
-          pan: { enabled: true },
-          zoom: { wheel: { enabled: true } }
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: data.map(point => point.x),
+            datasets: [{
+                label: "Gain (dB)",
+                data: data,
+                borderColor: "blue",
+                borderWidth: 2,
+                fill: false,
+                pointRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            animation: false,
+            scales: {
+                x: { type: "linear", title: { display: true, text: "Frequency (Hz)" } },
+                y: { title: { display: true, text: "Gain (dB)" }, min: -40, max: 0 }
+            }
         }
-      }
-    }
-  });
+    });
 
-  const osc = document.getElementById("oscilloscope").getContext("2d");
-  oscChart = new Chart(osc, {
-    type: "line",
-    data: {
-      labels: [],
-      datasets: [
-        { label: "Input Signal", borderColor: "#2980b9", data: [], fill: false },
-        { label: "Output Signal", borderColor: "#27ae60", data: [], fill: false }
-      ]
-    },
-    options: {
-      responsive: true,
-      animation: false,
-      scales: {
-        x: { title: { display: true, text: 'Time (ms)' } },
-        y: { title: { display: true, text: 'Voltage (V)' }, min: -1.5, max: 1.5 }
-      }
-    }
-  });
+    startOscilloscope(fc);
 }
 
-[resistorInput, capacitorInput, capUnitSelect, centerFreqInput, autoMode, oscFreqInput].forEach(input => {
-  input.addEventListener("input", updateFrequencyResponse);
+function startOscilloscope(frequency) {
+    if (audioContext) {
+        oscillator.stop();
+        audioContext.close();
+    }
+
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    oscillator = audioContext.createOscillator();
+    analyser = audioContext.createAnalyser();
+
+    oscillator.type = "sine";
+    oscillator.frequency.value = frequency;
+    oscillator.connect(analyser);
+    analyser.connect(audioContext.destination);
+    oscillator.start();
+
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+    drawOscilloscope();
+}
+
+function drawOscilloscope() {
+    const oscCanvas = document.getElementById("oscilloscopeCanvas");
+    const oscCtx = oscCanvas.getContext("2d");
+
+    function update() {
+        requestAnimationFrame(update);
+        analyser.getByteTimeDomainData(dataArray);
+
+        oscCtx.clearRect(0, 0, oscCanvas.width, oscCanvas.height);
+        oscCtx.beginPath();
+
+        const sliceWidth = oscCanvas.width / bufferLength;
+        let x = 0;
+
+        for (let i = 0; i < bufferLength; i++) {
+            let y = (dataArray[i] / 255) * oscCanvas.height;
+            if (i === 0) {
+                oscCtx.moveTo(x, y);
+            } else {
+                oscCtx.lineTo(x, y);
+            }
+            x += sliceWidth;
+        }
+
+        oscCtx.strokeStyle = "green";
+        oscCtx.lineWidth = 2;
+        oscCtx.stroke();
+    }
+    update();
+}
+
+document.getElementById("rSlider").addEventListener("input", (e) => {
+    document.getElementById("rValue").value = e.target.value;
+    updateChart();
 });
 
-freqSlider.addEventListener("input", () => {
-  rangeValue.textContent = freqSlider.value;
-  updateFrequencyResponse();
+document.getElementById("cSlider").addEventListener("input", (e) => {
+    document.getElementById("cValue").value = e.target.value;
+    updateChart();
 });
 
-setupChart();
-updateFrequencyResponse();
+updateChart();
