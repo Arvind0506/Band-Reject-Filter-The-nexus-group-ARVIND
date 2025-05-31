@@ -90,47 +90,57 @@
 
   const myQuestions = [
     {
-      question: "1. जिस सिद्धांत पर विशिष्ट घूर्णन के प्रयोग का आधार है वह है:",  ///// Write the question inside double quotes
+      question: "1. What is the main function of a Band Reject Filter?",  ///// Write the question inside double quotes
       answers: {
-        a: "ध्रुवीकृत प्रकाश ऑप्टिकली सक्रिय माध्यम से गुजरते समय दो घटकों में विभाजित हो जाता है",                  ///// Write the option 1 inside double quotes
-        b: "ध्रुवीकृत प्रकाश ऑप्टिकली सक्रिय माध्यम से गुजरते समय घुमता है",                  ///// Write the option 2 inside double quotes
-        c: "ध्रुवीकृत प्रकाश पानी से गुजरते समय विचलित हो जाता है",                  ///// Write the option 3 inside double quotes
-        d: "इनमें से कोई नहीं"                   ///// Write the option 4 inside double quotes
+        a: "To pass a certain band of frequencies",                  ///// Write the option 1 inside double quotes
+        b: " To amplify low frequencies",                  ///// Write the option 2 inside double quotes
+        c: "To reject a specific band of frequencies",                  ///// Write the option 3 inside double quotes
+        d: "To convert AC to DC"                   ///// Write the option 4 inside double quotes
       },
-      correctAnswer: "b"                ///// Write the correct option inside double quotes
+      correctAnswer: "c"                ///// Write the correct option inside double quotes
     },
 
     {
-     question: "2. शुगर घोल की सांद्रता बढ़ाने पर ध्रुवीकृत प्रकाश का घुमाव कोण:",  ///// Write the question inside double quotes
+     question: "2. What is the other name for a Band Reject Filter?",  ///// Write the question inside double quotes
       answers: {
-        a: "बढ़ता है",                  ///// Write the option 1 inside double quotes
-        b: " घटता है",                  ///// Write the option 2 inside double quotes
-        c: "अपरिवर्तित रहता है",                  ///// Write the option 3 inside double quotes
-        d: "इनमें से कोई नहीं"                   ///// Write the option 4 inside double quotes
+        a: "Low Pass Filter",                  ///// Write the option 1 inside double quotes
+        b: " Band Pass Filter",                  ///// Write the option 2 inside double quotes
+        c: "Notch Filter",                  ///// Write the option 3 inside double quotes
+        d: "High Pass Filter"                   ///// Write the option 4 inside double quotes
       },
-      correctAnswer: "a"                ///// Write the correct option inside double quotes
+      correctAnswer: "c"                ///// Write the correct option inside double quotes
     },     
     {
-      question: "3. किसी भी घोल का विशिष्ट घूर्णन किस पर निर्भर करता है:",  ///// Write the question inside double quotes
+      question: "3. The notch frequency  of a passive BRF using L and C is given by:",  ///// Write the question inside double quotes
        answers: {
-         a: "सांद्रता",                  ///// Write the option 1 inside double quotes
-         b: "नलिका की लंबाई",                  ///// Write the option 2 inside double quotes
-         c: "तापमान",                  ///// Write the option 3 inside double quotes
-         d: "इनमें से कोई नहीं"                   ///// Write the option 4 inside double quotes
+         a: "f<sub>0</sub> = 1/(LC)",                  ///// Write the option 1 inside double quotes
+         b: "f<sub>0</sub> = 2π√(LC)",                  ///// Write the option 2 inside double quotes
+         c: "f<sub>0</sub> = 1/2π√(LC)",                  ///// Write the option 3 inside double quotes
+         d: "f<sub>0</sub> = √(LC)"                   ///// Write the option 4 inside double quotes
        },
        correctAnswer: "c"                ///// Write the correct option inside double quotes
      }, 
      {
-      question: "4. यदि नलिका की लंबाई बढ़ाई जाए तो किसी भी घोल का विशिष्ट घूर्णन:",  ///// Write the question inside double quotes
+      question: "4. Which components are used in a passive band reject filter?",  ///// Write the question inside double quotes
        answers: {
-         a: "बढ़ता है",                  ///// Write the option 1 inside double quotes
-         b: "घटता है",                  ///// Write the option 2 inside double quotes
-         c: "अपरिवर्तित रहता है",                  ///// Write the option 3 inside double quotes
-         d: "इनमें से कोई नहीं"                   ///// Write the option 4 inside double quotes
+         a: "Only op-amps",                  ///// Write the option 1 inside double quotes
+         b: "Only capacitors",                  ///// Write the option 2 inside double quotes
+         c: "Resistors, capacitors, and inductors ",                  ///// Write the option 3 inside double quotes
+         d: "Transistors"                   ///// Write the option 4 inside double quotes
        },
        correctAnswer: "c"                ///// Write the correct option inside double quotes
-     },                              ///// To add more questions, copy the section below 
-    									                  ///// this line
+     }, 
+
+    {
+      question: "5. The output of a BRF is minimum at:",
+      answers: {
+        a: "High frequency",
+        b: " Low frequency",
+        c: "Notch frequency",
+        d: "Zero frequency"
+      },
+      correctAnswer: "c"
+    },
 
 
     /* To add more MCQ's, copy the below section, starting from open curly braces ( { )
