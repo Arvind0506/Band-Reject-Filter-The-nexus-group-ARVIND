@@ -2,47 +2,142 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Band Reject Filter Simulation</title>
-  <link rel="stylesheet" href="main.css">
+  <title>Band Reject Filter</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      background: white;
+    }
+    .control-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .control-panel label {
+      display: flex;
+      flex-direction: column;
+      font-size: 14px;
+    }
+    input[type="number"], input[type="range"] {
+      width: 120px;
+    }
+    #responseChart {
+      width: 100%;
+      height: 300px;
+    }
+    #oscilloscopeCanvas {
+      width: 100%;
+      height: 200px;
+      border: 1px solid black;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Band Reject Filter Simulation</h1>
-  </header>
-  <main>
-    <section class="controls">
-      <label>R (Ohms): <input type="number" id="resistor" value="1000"></label>
-      <label>C: <input type="number" id="capacitor" value="1" step="0.1">
-        <select id="capUnit">
-          <option value="1">F</option>
-          <option value="1e-3">mF</option>
-          <option value="1e-6" selected>μF</option>
-          <option value="1e-9">nF</option>
-          <option value="1e-12">pF</option>
-        </select>
-      </label>
-      <label>Center Frequency (f₀ Hz): <input type="number" id="centerFreq" value="1000"></label>
-      <label>Frequency Range (Hz): <input type="range" id="frequencyRange" min="10" max="5000" value="1000">
-        <span id="rangeValue">1000</span>
-      </label>
-      <label>Oscillator Frequency (Hz): <input type="number" id="oscFreq" value="1000"></label>
-      <label><input type="checkbox" id="autoMode" checked> Auto f₀ = 1 / (2πRC)</label>
-    </section>
-    <section><canvas id="responseChart" width="800" height="400"></canvas></section>
-    <section class="export-buttons">
-      <button class="button" onclick="exportChartAsImage()">Export as PNG</button>
-      <button class="button" onclick="exportDataAsCSV()">Export Data (CSV)</button>
-      <button class="button" onclick="exportOscilloscopeAsImage()">Download Waveform Image</button>
-    </section>
-    <section>
-      <h3>Oscilloscope Simulation</h3>
-      <canvas id="oscilloscope" width="800" height="300"></canvas>
-      <audio id="audioOutput" controls></audio>
-    </section>
-  </main>
-  <script src="main.js"></script>
+
+  <h2>Band Reject Filter Simulation</h2>
+
+  <div class="control-panel">
+    <label>R (Ohms):
+      <input type="number" id="rValue" value="1000" />
+    </label>
+    <label>C (F):
+      <input type="number" id="cValue" value="0.000001" step="0.000001" />
+    </label>
+    <label>Center Frequency (Hz):
+      <input type="number" id="fcValue" value="1000" />
+    </label>
+    <label>Frequency Range (Hz):
+      <input type="range" id="freqRange" min="100" max="10000" value="1000" />
+    </label>
+    <label>Oscillator Frequency (Hz):
+      <input type="number" id="oscFreq" value="1000" />
+    </label>
+    <label>
+      <input type="checkbox" id="autoFc" checked />
+      Auto fc = 1 / (2πRC)
+    </label>
+  </div>
+
+  <canvas id="responseChart"></canvas>
+
+  <h3>Oscilloscope Simulation</h3>
+  <canvas id="oscilloscopeCanvas"></canvas>
+
+  <script>
+    const rInput = document.getElementById('rValue');
+    const cInput = document.getElementById('cValue');
+    const fcInput = document.getElementById('fcValue');
+    const rangeInput = document.getElementById('freqRange');
+    const autoFc = document.getElementById('autoFc');
+
+    const ctx = document.getElementById('responseChart').getContext('2d');
+    let chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Gain (dB)',
+          data: [],
+          borderColor: 'blue',
+          borderWidth: 2,
+          fill: false,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        scales: {
+          x: {
+            type: 'linear',
+            title: { display: true, text: 'Frequency (Hz)' }
+          },
+          y: {
+            title: { display: true, text: 'Gain (dB)' },
+            min: -40,
+            max: 0
+          }
+        }
+      }
+    });
+
+    function updateChart() {
+      const R = parseFloat(rInput.value);
+      const C = parseFloat(cInput.value);
+      let fc = parseFloat(fcInput.value);
+
+      if (autoFc.checked) {
+        fc = 1 / (2 * Math.PI * R * C);
+        fcInput.value = fc.toFixed(2);
+      }
+
+      const range = parseInt(rangeInput.value);
+      const data = [];
+
+      for (let f = fc / 10; f <= fc * 10; f += (fc * 10 - fc / 10) / 200) {
+        const omega = 2 * Math.PI * f;
+        const gain = Math.sqrt(1 / (1 + Math.pow(omega * R * C, 2)));
+        const gainDb = 20 * Math.log10(gain);
+        data.push({ x: f, y: gainDb });
+      }
+
+      chart.data.labels = data.map(point => point.x);
+      chart.data.datasets[0].data = data;
+      chart.update();
+    }
+
+    rInput.addEventListener('input', updateChart);
+    cInput.addEventListener('input', updateChart);
+    fcInput.addEventListener('input', updateChart);
+    rangeInput.addEventListener('input', updateChart);
+    autoFc.addEventListener('change', updateChart);
+
+    updateChart();
+  </script>
+
 </body>
 </html>
