@@ -2,12 +2,60 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "In a BRF, the frequency where attenuation is maximum is called:",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Cut-off frequency",
+        "b": "Resonant frequency",
+        "c": "Notch frequency",
+        "d": "Center frequency"
+      },
+      "explanations": {
+        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "b": "Explanation 2",
+        "c": "Explanation 2",
+        "d": "Explanation 2"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+      "question": "If L = 2.53 mH and C = 0.01 µF, then the notch frequency is approximately:",
+      "answers": {
+        "a": "500 Hz",
+        "b": "1 KHz",
+        "c": "5 KHz",
+        "d": "10 KHz"
+      },
+      "explanations": {
+        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "b": "Explanation 2",
+        "c": "Explanation 2",
+        "d": "Explanation 2"
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+      "question": "In the frequency response plot of a BRF, the notch appears:",
+      "answers": {
+        "a": "As a peak",
+        "b": "As a dip",
+        "c": "As a straight",
+        "d": "As a parabola"
+      },
+      "explanations": {
+        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "b": "Explanation 2",
+        "c": "Explanation 2",
+        "d": "Explanation 2"
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+      "question": "The Band Reject Filter is formed by combining:",
+      "answers": {
+        "a": "LPF and HPF",
+        "b": "LPF and BPF",
+        "c": "BPF and Differentiator",
+        "d": "Integrator and Amplifier"
       },
       "explanations": {
         "a": "Explanation 1  <a href='www.google.com'>here</a>",
@@ -19,12 +67,12 @@
       "difficulty": "beginner"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "A real-life application of a BRF is:",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Voltage regulation",
+        "b": "Removing 50/60 Hz power line noise",
+        "c": "Amplifying RF signals",
+        "d": "Rectifying AC signals"
       },
       "explanations": {
         "a": "Explanation 1  <a href='www.google.com'>here</a>",
