@@ -18,6 +18,7 @@
       "correctAnswer": "c",
       "difficulty": "beginner"
     },
+    {
       "question": "If L = 2.53 mH and C = 0.01 µF, then the notch frequency is approximately:",
       "answers": {
         "a": "500 Hz",
@@ -34,6 +35,7 @@
       "correctAnswer": "b",
       "difficulty": "beginner"
     },
+    {
       "question": "In the frequency response plot of a BRF, the notch appears:",
       "answers": {
         "a": "As a peak",
