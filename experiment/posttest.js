@@ -90,7 +90,7 @@
 
   const myQuestions = [
     {
-      question1: "1. In a BRF, the frequency where attenuation is maximum is called:",  
+      question: "1. In a BRF, the frequency where attenuation is maximum is called:",  
       answers: {
         a: "Cut-off frequency",
         b: "Resonant frequency",
@@ -101,7 +101,7 @@
     },
 
     {
-      question2: " If L = 2.53 mH and C = 0.01 µF, then the notch frequency is approximately:",  ///// Write the question inside double quotes
+      question: " If L = 2.53 mH and C = 0.01 µF, then the notch frequency is approximately:",  ///// Write the question inside double quotes
       answers: {
         a: "500 Hz",
         b: "1 KHz",
@@ -112,7 +112,7 @@
     },
     
     {
-      question3: "In the frequency response plot of a BRF, the notch appears:",  
+      question: "In the frequency response plot of a BRF, the notch appears:",  
       answers: {
         a: "As a peak",
         b: "As a dip",
@@ -123,7 +123,7 @@
     },
 
     {
-      question4: "4. The Band Reject Filter is formed by combining:",  
+      question: "4. The Band Reject Filter is formed by combining:",  
       answers: {
         a: "LPF and HPF",
         b: "LPF and BPF",
@@ -134,7 +134,7 @@
     },
 
     {
-      question5: "5. A real-life application of a BRF is:",  
+      question: "5. A real-life application of a BRF is:",  
       answers: {
         a: "Voltage regulation",
         b: "Removing 50/60 Hz power line noise ",
