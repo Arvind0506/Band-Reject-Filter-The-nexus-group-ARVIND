@@ -1,4 +1,4 @@
-## Theory
+
 
 #### Band Reject Filter (BRF):
 
