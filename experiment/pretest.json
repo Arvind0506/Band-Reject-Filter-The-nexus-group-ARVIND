@@ -2,12 +2,12 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "What is the main function of a Band Reject Filter?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "To pass a certain band of frequencies",
+        "b": "To amplify low frequencies",
+        "c": "To reject a specific band of frequencies",
+        "d": "To convert AC to DC"
       },
       "explanations": {
         "a": "Explanation 1  <a href='www.google.com'>here</a>",
@@ -15,16 +15,67 @@
         "c": "Explanation 2",
         "d": "Explanation 2"
       },
-      "correctAnswer": "a",
+      "correctAnswer": "c",
       "difficulty": "beginner"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "What is the other name for a Band Reject Filter?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "Low Pass",
+        "b": "Band Pass",
+        "c": "Notch Pass",
+        "d": "High Pass"
+      },
+      "explanations": {
+        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "b": "Explanation 2",
+        "c": "Explanation 2",
+        "d": "Explanation 2"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "The notch frequency  of a passive BRF using L and C is given by:",
+      "answers": {
+        "a": "f<sub>0</sub> = 1/(LC)",
+        "b": "f<sub>0</sub> = 2π√(LC)",
+        "c": "f<sub>0</sub> = 1/2π√(LC)",
+        "d": "f<sub>0</sub> = √(LC)"
+      },
+      "explanations": {
+        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "b": "Explanation 2",
+        "c": "Explanation 2",
+        "d": "Explanation 2"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which components are used in a passive band reject filter?",
+      "answers": {
+        "a": "Only op-amps",
+        "b": "Only capacitor",
+        "c": "Resistors, capacitors, and inductors",
+        "d": "Transistors"
+      },
+      "explanations": {
+        "a": "Explanation 1  <a href='www.google.com'>here</a>",
+        "b": "Explanation 2",
+        "c": "Explanation 2",
+        "d": "Explanation 2"
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "The output of a BRF is minimum at:",
+      "answers": {
+        "a": "High frequency",
+        "b": "Low frequency",
+        "c": "Notch frequency",
+        "d": "Zero frequency"
       },
       "explanations": {
         "a": "Explanation 1  <a href='www.google.com'>here</a>",
