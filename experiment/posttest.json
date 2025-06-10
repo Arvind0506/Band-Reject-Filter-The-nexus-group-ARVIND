@@ -52,6 +52,7 @@
       "correctAnswer": "b",
       "difficulty": "beginner"
     },
+    {
       "question": "The Band Reject Filter is formed by combining:",
       "answers": {
         "a": "LPF and HPF",
